@@ -5,6 +5,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
 import org.springframework.integration.ftp.session.FtpRemoteFileTemplate;
 
@@ -13,6 +14,7 @@ import java.io.FileOutputStream;
 
 @Configuration
 @Slf4j
+@Profile("prod")
 public class FtpTemplateConfiguration {
 
     @Value("${ftp.file.name}")
