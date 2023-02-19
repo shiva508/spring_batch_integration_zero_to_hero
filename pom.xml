@@ -18,6 +18,7 @@
 		<module>worker</module>
 		<module>files-integration</module>
         <module>custom-mina-ftp-server</module>
+        <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
 	<properties>
@@ -92,11 +93,6 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>-->
 	</dependencies>
 	</dependencyManagement>
 	<build>

@@ -37,7 +37,7 @@ public class VideoGameCsvToDbStepConfig {
     public VideoGameCsvToDbStepConfig(DataSource dataSource,
                                       JobRepository jobRepository,
                                       PlatformTransactionManager transactionManager,
-                                      @Value("file://${HOME}/shiva/mywork/assignment/spring_batch_zero_to_hero/data/vgsales.csv") Resource resource,
+                                      @Value("${csv.file.path}") Resource resource,
                                       JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;
         this.jobRepository = jobRepository;

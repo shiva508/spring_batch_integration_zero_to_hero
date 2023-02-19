@@ -19,12 +19,14 @@ public class VideoGameCsvToDbJobConfig {
     public Job videoGameJob(JobRepository jobRepository,
                             @Qualifier("videoGameStep") Step videoGameStep,
                             YearPlatformReportStepConfiguration yearPlatformReportStepConfiguration,
+                            YearReportStepConfiguration yearReportStepConfiguration,
                             EndStepConfiguration endStepConfiguration,
                             ErrorStepConfiguration errorStepConfiguration){
         return new JobBuilder("videoGameJob",jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(videoGameStep).on(EMPTY_CSV_STATUS).to(errorStepConfiguration.errorStep())
                 .from(videoGameStep).on("*").to(yearPlatformReportStepConfiguration.yearPlatformReportStep())
+                .next(yearReportStepConfiguration.yearReportStep())
                 .next(endStepConfiguration.jobFinidhedStep())
                 .build()
                 .build();
