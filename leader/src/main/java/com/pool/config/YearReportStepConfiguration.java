@@ -1,18 +1,30 @@
 package com.pool.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pool.records.YearPlatformSales;
 import com.pool.records.YearReport;
-import org.springframework.batch.core.Step;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.integration.chunk.ChunkMessageChannelItemWriter;
+import org.springframework.batch.integration.chunk.RemoteChunkHandlerFactoryBean;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.boot.autoconfigure.batch.JobExecutionEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.integration.amqp.dsl.Amqp;
+import org.springframework.integration.channel.QueueChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.*;
@@ -24,14 +36,18 @@ import java.util.concurrent.ConcurrentHashMap;
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final DataSource dataSource;
+
+    private final ObjectMapper objectMapper;
     public static final String EMPTY_CSV_STATUS = "EMPTY";
     private final Map<Integer,YearReport> integerYearReportMap=new ConcurrentHashMap<>();
     public YearReportStepConfiguration(JobRepository jobRepository,
                                        PlatformTransactionManager transactionManager,
-                                       DataSource dataSource) {
+                                       DataSource dataSource,
+                                       ObjectMapper objectMapper) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
         this.dataSource=dataSource;
+        this.objectMapper= objectMapper;
     }
 
     @EventListener
@@ -72,14 +88,66 @@ import java.util.concurrent.ConcurrentHashMap;
     }
 
     @Bean
-    public Step yearReportStep(){
+    public TaskletStep yearReportStep(){
         return new StepBuilder("yearReportStep",jobRepository)
-                .<YearReport, YearReport>chunk(1000,transactionManager)
+                .<YearReport, String>chunk(1000,transactionManager)
                 .reader(yearReportItemReader())
-                .writer(chunk -> {
+                .processor(objectMapper::writeValueAsString)
+                .writer(chunkMessageChannelItemWriter()/*chunk -> {
                     var deDupped = new LinkedHashSet<>(chunk.getItems());
                    // System.out.println(deDupped);
-                }).build();
+                }*/).build();
     }
+
+    @Bean
+    public MessageChannel requests() {
+        return  MessageChannels.direct().get();
+    }
+
+    @Bean
+    public QueueChannel replies() {
+        return  new QueueChannel();
+    }
+    @Bean
+    public IntegrationFlow outboundFlow(AmqpTemplate amqpTemplate) {
+        return IntegrationFlow.from(requests())
+                .handle(Amqp.outboundAdapter(amqpTemplate)
+                        .routingKey("requests"))
+                .get();
+    }
+
+    @Bean
+    public MessagingTemplate messagingTemplate() {
+        MessagingTemplate template = new MessagingTemplate();
+        template.setDefaultChannel(requests());
+        template.setReceiveTimeout(2000);
+        return template;
+    }
+
+    @Bean
+    @StepScope
+    public ChunkMessageChannelItemWriter<String> chunkMessageChannelItemWriter() {
+        ChunkMessageChannelItemWriter<String> chunkMessageChannelItemWriter = new ChunkMessageChannelItemWriter<String>();
+        chunkMessageChannelItemWriter.setMessagingOperations(messagingTemplate());
+        chunkMessageChannelItemWriter.setReplyChannel(replies());
+        return chunkMessageChannelItemWriter;
+    }
+
+    @Bean
+    public RemoteChunkHandlerFactoryBean<String> chunkHandler() {
+        RemoteChunkHandlerFactoryBean<String> remoteChunkHandlerFactoryBean = new RemoteChunkHandlerFactoryBean<String>();
+        remoteChunkHandlerFactoryBean.setChunkWriter(chunkMessageChannelItemWriter());
+        remoteChunkHandlerFactoryBean.setStep(yearReportStep());
+        return remoteChunkHandlerFactoryBean;
+    }
+
+    @Bean
+    public IntegrationFlow replyFlow(ConnectionFactory connectionFactory) {
+        return IntegrationFlow
+                .from(Amqp.inboundAdapter(connectionFactory, "replies"))
+                .channel(replies())
+                .get();
+    }
+
 
 }
