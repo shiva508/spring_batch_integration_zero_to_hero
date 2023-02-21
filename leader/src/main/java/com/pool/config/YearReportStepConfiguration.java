@@ -3,26 +3,29 @@ package com.pool.config;
 import com.pool.records.YearPlatformSales;
 import com.pool.records.YearReport;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.boot.autoconfigure.batch.JobExecutionEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@EnableBatchProcessing
 @Configuration
-public class YearReportStepConfiguration {
-private final JobRepository jobRepository;
-private final PlatformTransactionManager transactionManager;
-private final DataSource dataSource;
-
+    public class YearReportStepConfiguration {
+    private final JobRepository jobRepository;
+    private final PlatformTransactionManager transactionManager;
+    private final DataSource dataSource;
+    public static final String EMPTY_CSV_STATUS = "EMPTY";
+    private final Map<Integer,YearReport> integerYearReportMap=new ConcurrentHashMap<>();
     public YearReportStepConfiguration(JobRepository jobRepository,
                                        PlatformTransactionManager transactionManager,
                                        DataSource dataSource) {
@@ -31,7 +34,16 @@ private final DataSource dataSource;
         this.dataSource=dataSource;
     }
 
-    private final Map<Integer,YearReport> integerYearReportMap=new ConcurrentHashMap<>();
+    @EventListener
+    public void batchJobCompleted(JobExecutionEvent event) {
+        var running = Map.of(//
+                "running", event.getJobExecution().getStatus().isRunning(),//
+                "finished", event.getJobExecution().getExitStatus().getExitCode() //
+        );//
+        System.out.println("jobExecutionEvent: [" + running + "]");
+        this.integerYearReportMap.clear();
+    }
+
     private final RowMapper<YearReport>  yearReportRowMapper= (rs, rowNum) -> {
         Integer year=rs.getInt("year");
         if(!this.integerYearReportMap.containsKey(year)){
@@ -64,12 +76,10 @@ private final DataSource dataSource;
         return new StepBuilder("yearReportStep",jobRepository)
                 .<YearReport, YearReport>chunk(1000,transactionManager)
                 .reader(yearReportItemReader())
-                .writer(new ItemWriter<YearReport>() {
-                    @Override
-                    public void write(Chunk<? extends YearReport> chunk) throws Exception {
-                        var deDupped = new LinkedHashSet<>(chunk.getItems());
-                        System.out.println(deDupped);
-                    }
+                .writer(chunk -> {
+                    var deDupped = new LinkedHashSet<>(chunk.getItems());
+                   // System.out.println(deDupped);
                 }).build();
     }
+
 }

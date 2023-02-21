@@ -15,14 +15,14 @@ services:
     ports:
       - "5432:5432"
 #RABBIT-MQ SERVICE
-#  rabbitmq:
-#    image: rabbitmq:3-management
-#    environment:
-#      - RABBITMQ_DEFAULT_USER=user
-#      - RABBITMQ_DEFAULT_PASS=password
-#    ports:
-#      - "5672:5672"
-#      - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 volumes:
   postgres-db:
     driver: local

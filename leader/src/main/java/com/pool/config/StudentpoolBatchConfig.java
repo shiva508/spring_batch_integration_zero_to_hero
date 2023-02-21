@@ -2,7 +2,6 @@ package com.pool.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -19,7 +18,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.FileCopyUtils;
-
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 @Configuration
-@EnableBatchProcessing
 public class StudentpoolBatchConfig {
 
 
@@ -53,7 +50,7 @@ public class StudentpoolBatchConfig {
                 .tasklet(tasklet,transactionManager)
                 .build();
     }
-    /*public Step csvToDb(JobRepository jobRepository,
+    public Step csvToDb(JobRepository jobRepository,
                         PlatformTransactionManager transactionManager,
                         @Value("/home/shiva/shiva/mywork/assignment/spring_batch_zero_to_hero/data/vgsales.csv")Resource resource){
         var lines=(String[])null;
@@ -73,7 +70,7 @@ public class StudentpoolBatchConfig {
                         System.out.println(chunkOneHumdredLines);
                     }
                 }).build();
-    }*/
+    }
     
     @Bean(name = "sampleJob")
     public Job job(JobRepository jobRepository,@Qualifier("step") Step step){
