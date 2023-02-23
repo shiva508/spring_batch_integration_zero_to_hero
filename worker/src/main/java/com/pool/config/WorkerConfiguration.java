@@ -75,7 +75,7 @@ public class WorkerConfiguration {
     @Bean
     public ItemProcessor<String, YearReport> rowDataToObjectProcessor(){
         return message -> {
-            System.out.println(">> processing YearReport JSON: " + message);
+            //System.out.println(">> processing YearReport JSON: " + message);
             Thread.sleep(5);
            return stringToObjectMapper(message);
         };
@@ -83,6 +83,11 @@ public class WorkerConfiguration {
 
     @Bean
     public ItemWriter<YearReport> itemWriter() {
-        return chunk -> chunk.getItems().forEach(System.out::println);
+        return chunk -> chunk.getItems().forEach(this::taskTakesTimeToComplete);
+    }
+
+    public void taskTakesTimeToComplete(YearReport yearReport){
+        System.out.println("=================================");
+        System.out.println(yearReport.year()+":"+yearReport.breakout());
     }
 }

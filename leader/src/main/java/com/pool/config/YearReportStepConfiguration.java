@@ -12,6 +12,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
 import org.springframework.batch.integration.chunk.ChunkMessageChannelItemWriter;
 import org.springframework.batch.integration.chunk.RemoteChunkHandlerFactoryBean;
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.boot.autoconfigure.batch.JobExecutionEvent;
@@ -124,19 +125,31 @@ import java.util.concurrent.ConcurrentHashMap;
         return template;
     }
 
+    public static class DedupingChunkMessageChannelItemWriter<T> extends ChunkMessageChannelItemWriter<T>{
+        @Override
+        public void write(Chunk<? extends T> items) throws Exception {
+            System.out.println("Called from here");
+           var inputCollection=items.getItems();
+            var newList=new ArrayList<>(new LinkedHashSet<>(inputCollection));
+            super.write(new Chunk<>(newList));
+        }
+    }
+
     @Bean
     @StepScope
     public ChunkMessageChannelItemWriter<String> chunkMessageChannelItemWriter() {
-        ChunkMessageChannelItemWriter<String> chunkMessageChannelItemWriter = new ChunkMessageChannelItemWriter<String>();
+        ChunkMessageChannelItemWriter<String> chunkMessageChannelItemWriter = new DedupingChunkMessageChannelItemWriter<String>();
         chunkMessageChannelItemWriter.setMessagingOperations(messagingTemplate());
         chunkMessageChannelItemWriter.setReplyChannel(replies());
         return chunkMessageChannelItemWriter;
     }
 
     @Bean
-    public RemoteChunkHandlerFactoryBean<String> chunkHandler() {
+    public RemoteChunkHandlerFactoryBean<String> chunkHandler() throws Exception {
+        ChunkMessageChannelItemWriter<String> proxyObject=(chunkMessageChannelItemWriter());
         RemoteChunkHandlerFactoryBean<String> remoteChunkHandlerFactoryBean = new RemoteChunkHandlerFactoryBean<String>();
-        remoteChunkHandlerFactoryBean.setChunkWriter(chunkMessageChannelItemWriter());
+        //remoteChunkHandlerFactoryBean.setChunkWriter(chunkMessageChannelItemWriter());
+        remoteChunkHandlerFactoryBean.setChunkWriter(proxyObject);
         remoteChunkHandlerFactoryBean.setStep(yearReportStep());
         return remoteChunkHandlerFactoryBean;
     }
