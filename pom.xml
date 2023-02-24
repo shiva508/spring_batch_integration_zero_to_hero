@@ -19,7 +19,9 @@
 		<module>files-integration</module>
         <module>custom-mina-ftp-server</module>
         <module>auto-config-remote-chunk</module>
-        <!--<module>scaling</module>-->
+        <module>remote-chunk-leader</module>
+		<module>remote-chunk-worker</module>
+		<!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
 	<properties>
@@ -48,6 +50,11 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-event</artifactId>
 		</dependency>-->
+		<dependency>
+			<groupId>com.pool</groupId>
+			<artifactId>auto-config-remote-chunk</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.ftpserver</groupId>
 			<artifactId>ftpserver-core</artifactId>
@@ -86,6 +93,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring-boot.version}</version>
 		</dependency>
+
 	</dependencies>
 	</dependencyManagement>
 	<build>

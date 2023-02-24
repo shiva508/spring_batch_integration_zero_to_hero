@@ -1,4 +1,4 @@
-package com.pool.annotation;
+package com.pool.record;
 
 public record Customer(String name) {
 }
