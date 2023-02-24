@@ -18,6 +18,7 @@
 		<module>worker</module>
 		<module>files-integration</module>
         <module>custom-mina-ftp-server</module>
+        <module>auto-config-remote-chunk</module>
         <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
