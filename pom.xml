@@ -14,13 +14,14 @@
 	<name>spring_batch_zero_to_hero</name>
 	<description>Demo project for Spring Boot</description>
 	<modules>
+		<module>auto-config-remote-chunk</module>
 		<module>leader</module>
 		<module>worker</module>
 		<module>files-integration</module>
         <module>custom-mina-ftp-server</module>
-        <module>auto-config-remote-chunk</module>
         <module>remote-chunk-leader</module>
 		<module>remote-chunk-worker</module>
+		<module>ipl-data-processor</module>
 		<!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
