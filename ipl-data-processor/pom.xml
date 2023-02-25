@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ipl-match-data-collector</module>
+        <module>ipl-remote-chunk-config</module>
     </modules>
 
 </project>

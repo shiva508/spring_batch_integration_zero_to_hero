@@ -22,10 +22,8 @@ public class RemoteChunkLeaderApplication {
     public ApplicationRunner applicationRunner(JobLauncher jobLauncher, Job job){
         return args -> {
             var jobParameters=new JobParametersBuilder()
-                    //.addString("uuid", UUID.randomUUID().toString())
-                    .addString("date",new Date().toString())
-                    //.addString("date",key)
-                    .toJobParameters();
+                                            .addString("date",new Date().toString())
+                                            .toJobParameters();
             JobExecution run = jobLauncher.run(job, jobParameters);
             long instanceId = run.getJobInstance().getInstanceId();
             System.out.println("Batch run id:"+instanceId);
