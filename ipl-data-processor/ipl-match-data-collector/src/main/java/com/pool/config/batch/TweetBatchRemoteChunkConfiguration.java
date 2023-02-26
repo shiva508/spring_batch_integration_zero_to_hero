@@ -21,6 +21,7 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -100,7 +101,6 @@ public class TweetBatchRemoteChunkConfiguration {
     //Convert java object to JSON format before sending to RABBITMQ
     public String convertToJson(Tweet tweet){
         try {
-            System.out.println(tweet);
             return objectMapper.writeValueAsString(tweet);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

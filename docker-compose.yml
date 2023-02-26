@@ -16,6 +16,7 @@ services:
       - "5432:5432"
 #RABBIT-MQ SERVICE
   rabbitmq:
+    container_name: rabbitmq-container
     image: rabbitmq:3-management
     environment:
       - RABBITMQ_DEFAULT_USER=user

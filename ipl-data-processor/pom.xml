@@ -14,6 +14,10 @@
     <modules>
         <module>ipl-match-data-collector</module>
         <module>ipl-remote-chunk-config</module>
+        <module>ipl-match-data-receiver</module>
+        <module>ipl-match-data-parallel-processing</module>
+        <module>ipl-match-data-async-processor</module>
+        <module>ipl-match-data-multi-thread-processor</module>
+        <module>ipl-match-data-partition-processor</module>
     </modules>
-
 </project>

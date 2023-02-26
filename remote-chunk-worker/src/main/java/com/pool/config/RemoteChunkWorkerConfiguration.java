@@ -56,4 +56,6 @@ public class RemoteChunkWorkerConfiguration {
                 .handle(Amqp.outboundAdapter(template).routingKey("replies"))//
                 .get();
     }
+
+
 }
