@@ -28,29 +28,11 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-boot.version>3.0.2</spring-boot.version>
+		<spring-cloud.version>2022.0.1</spring-cloud.version>
 	</properties>
+
 	<dependencyManagement>
 	<dependencies>
-		<!--<dependency>
-			<groupId>org.springframework.batch</groupId>
-			<artifactId>spring-batch-integration</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-amqp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-file</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-ftp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-event</artifactId>
-		</dependency>-->
 		<dependency>
 			<groupId>com.pool</groupId>
 			<artifactId>auto-config-remote-chunk</artifactId>
@@ -66,7 +48,16 @@
 			<artifactId>ftpserver-core</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-deployer-local</artifactId>
+		</dependency>-->
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-integration</artifactId>
@@ -100,8 +91,19 @@
 			<version>${spring-boot.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>${spring-cloud.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+
+		<!--KAFKA INTEGRATION-->
+
 	</dependencies>
 	</dependencyManagement>
+
 	<build>
 		<plugins>
 			<plugin>
