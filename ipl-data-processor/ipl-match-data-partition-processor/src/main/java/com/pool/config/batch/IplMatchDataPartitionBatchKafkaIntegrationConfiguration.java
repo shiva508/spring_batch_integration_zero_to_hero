@@ -1,11 +1,15 @@
 package com.pool.config.batch;
 
-import com.pool.props.TweetCsvConfiguration;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pool.config.kafka.KafkaConfig;
 import com.pool.record.Transaction;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.partition.PartitionHandler;
@@ -13,6 +17,7 @@ import org.springframework.batch.core.partition.support.MultiResourcePartitioner
 import org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -20,97 +25,79 @@ import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.deployer.spi.task.TaskLauncher;
-import org.springframework.cloud.task.batch.partition.DeployerPartitionHandler;
-import org.springframework.cloud.task.batch.partition.DeployerStepExecutionHandler;
-import org.springframework.cloud.task.batch.partition.PassThroughCommandLineArgsProvider;
-import org.springframework.cloud.task.batch.partition.SimpleEnvironmentVariablesProvider;
-import org.springframework.cloud.task.configuration.EnableTask;
-import org.springframework.cloud.task.repository.TaskRepository;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.integration.IntegrationMessageHeaderAccessor;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.MessageChannels;
+import org.springframework.integration.kafka.dsl.Kafka;
+import org.springframework.integration.kafka.dsl.KafkaProducerMessageHandlerSpec;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.ConsumerProperties;
+import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.PollableChannel;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Properties;
+import java.util.stream.Stream;
 
-//@Configuration
-//@EnableTask
-public class IplMatchDataPartitionBatchCoonfiguration {
-
+@Configuration
+public class IplMatchDataPartitionBatchKafkaIntegrationConfiguration {
     private final JobRepository jobRepository;
-
     private final PlatformTransactionManager transactionManager;
-
     private final ConfigurableApplicationContext context;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ProducerFactory<String, String> producerFactory;
+    private final ObjectMapper objectMapper;
 
 
+    private final KafkaConfig kafkaConfig;
 
     @Value("file://${HOME}/shiva/mywork/assignment/dada/spring_batch_integration_zero_to_hero/data/partition/csv/transactions*.csv")
     private Resource[] inputResources;
 
-    public IplMatchDataPartitionBatchCoonfiguration(JobRepository jobRepository,
-                                       PlatformTransactionManager transactionManager,
-                                       ConfigurableApplicationContext context) {
+    public IplMatchDataPartitionBatchKafkaIntegrationConfiguration(JobRepository jobRepository,
+                                                    PlatformTransactionManager transactionManager,
+                                                    ConfigurableApplicationContext context,
+                                                    KafkaTemplate<String, String> kafkaTemplate,
+                                                    ProducerFactory<String, String> producerFactory,
+                                                    ObjectMapper objectMapper,
+                                                                   KafkaConfig kafkaConfig) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
         this.context = context;
+        this.kafkaTemplate=kafkaTemplate;
+        this.producerFactory=producerFactory;
+        this.objectMapper=objectMapper;
+        this.kafkaConfig=kafkaConfig;
     }
-
-    /*@Bean
-    @Profile("!worker")
-    public DeployerPartitionHandler partitionHandler(TaskLauncher taskLauncher,
-                                                     JobExplorer jobExplorer,
-                                                     ApplicationContext context,
-                                                     Environment environment) throws Exception {
-        Resource resource = context.getResource("file:///Users/mminella/Documents/IntelliJWorkspace/scaling-demos/partitioned-demo/target/partitioned-demo-0.0.1-SNAPSHOT.jar");
-
-        DeployerPartitionHandler partitionHandler = new DeployerPartitionHandler(taskLauncher, jobExplorer, resource, "step1",null);
-
-        List<String> commandLineArgs = new ArrayList<>(3);
-        commandLineArgs.add("--spring.profiles.active=worker");
-        commandLineArgs.add("--spring.cloud.task.initialize.enable=false");
-        commandLineArgs.add("--spring.batch.initializer.enabled=false");
-        commandLineArgs.add("--spring.datasource.initialize=false");
-        partitionHandler.setCommandLineArgsProvider(new PassThroughCommandLineArgsProvider(commandLineArgs));
-        partitionHandler.setEnvironmentVariablesProvider(new SimpleEnvironmentVariablesProvider(environment));
-        partitionHandler.setMaxWorkers(3);
-        partitionHandler.setApplicationName("PartitionedBatchJobTask");
-
-        return partitionHandler;
-    }*/
 
     @Bean
     @StepScope
     public MultiResourcePartitioner partitioner() {
-        System.out.println("=================>MultiResourcePartitioner<===============================");
         MultiResourcePartitioner partitioner = new MultiResourcePartitioner();
         partitioner.setKeyName("file");
         partitioner.setResources(inputResources);
         return partitioner;
     }
 
-    /*@Bean
-    @Profile("worker")
-    public DeployerStepExecutionHandler stepExecutionHandler(JobExplorer jobExplorer) {
-        return new DeployerStepExecutionHandler(this.context, jobExplorer, this.jobRepository);
-    }*/
 
     @Bean
     @StepScope
     public FlatFileItemReader<Transaction> fileTransactionReader(
             @Value("#{stepExecutionContext['file']}") Resource resource) {
-        System.out.println("=================>fileTransactionReader<===============================");
-        System.out.println(resource.getFilename());
         return new FlatFileItemReaderBuilder<Transaction>()
                 .name("flatFileTransactionReader")
                 .resource(resource)
@@ -125,7 +112,6 @@ public class IplMatchDataPartitionBatchCoonfiguration {
 
     @Bean
     public PartitionHandler partitionHandler() {
-        System.out.println("===================>partitionHandler<===============================");
         TaskExecutorPartitionHandler retVal = new TaskExecutorPartitionHandler();
         retVal.setTaskExecutor(taskExecutor());
         retVal.setStep(step1());
@@ -140,7 +126,6 @@ public class IplMatchDataPartitionBatchCoonfiguration {
     @Bean
     @StepScope
     public JdbcBatchItemWriter<Transaction> writer(DataSource dataSource) {
-        System.out.println("===================>writer<===============================");
         return new JdbcBatchItemWriterBuilder<Transaction>()
                 .dataSource(dataSource)
                 .beanMapped()
@@ -150,7 +135,6 @@ public class IplMatchDataPartitionBatchCoonfiguration {
 
     @Bean
     public Step partitionedMaster() {
-        System.out.println("=================>partitionedMaster<===============================");
         return new StepBuilder("step1",jobRepository)
                 .partitioner("step1", partitioner())
                 .step(step1())
@@ -159,10 +143,15 @@ public class IplMatchDataPartitionBatchCoonfiguration {
     }
 
     @Bean
+    //@StepScope
     public Step step1() {
         return new StepBuilder("step1",jobRepository)
                 .<Transaction, Transaction>chunk(100,transactionManager)
                 .reader(fileTransactionReader(null))
+                .processor(transaction -> {
+                    toKafkaMessageChannel().send(new GenericMessage<>(convertToJson(transaction)));
+                    return transaction;
+                })
                 .writer(writer(null))
                 .build();
     }
@@ -170,7 +159,6 @@ public class IplMatchDataPartitionBatchCoonfiguration {
     @Bean
     @StepScope
     public MultiResourceItemReader<Transaction> multiResourceItemReader() {
-        System.out.println("=======================>multiResourceItemReader<============================");
         return new MultiResourceItemReaderBuilder<Transaction>()
                 .delegate(delegate())
                 .name("multiresourceReader")
@@ -180,7 +168,6 @@ public class IplMatchDataPartitionBatchCoonfiguration {
 
     @Bean
     public FlatFileItemReader<Transaction> delegate() {
-        System.out.println("==================>delegate<========================");
         return new FlatFileItemReaderBuilder<Transaction>()
                 .name("flatFileTransactionReader")
                 .delimited()
@@ -199,5 +186,72 @@ public class IplMatchDataPartitionBatchCoonfiguration {
                 .build();
     }
 
+
+    @Bean("toKafkaMessageChannel")
+    public MessageChannel toKafkaMessageChannel(){
+        return MessageChannels.direct().get();
+    }
+
+    @Bean("fromKafkaMessageChannel")
+    public DirectChannel fromKafkaMessageChannel(){
+        return MessageChannels.direct().get();
+    }
+
+
+    /*=======================Kafka Code======================*/
+
+    @Bean
+    public DefaultKafkaHeaderMapper mapper() {
+        return new DefaultKafkaHeaderMapper();
+    }
+    private KafkaProducerMessageHandlerSpec<String, String, ?> kafkaMessageHandler(
+            ProducerFactory<String, String> producerFactory, String topic) {
+        return Kafka
+                .outboundChannelAdapter(producerFactory)
+                .messageKey(m -> m
+                        .getHeaders()
+                        .get(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER))
+                .headerMapper(mapper())
+                .partitionId(m -> 10)
+                .topicExpression("headers[kafka_topic] ?: '" + topic + "'")
+                .configureKafkaTemplate(t -> t.id("kafkaTemplate:" + topic));
+    }
+
+
+    @Bean("sendToKafkaFlow")
+    public IntegrationFlow sendToKafkaFlow() {
+       return IntegrationFlow.from(toKafkaMessageChannel())
+                .handle(Kafka.outboundChannelAdapter(kafkaTemplate).topic("kRequests"))
+                .get();
+    }
+
+    @Bean("receiveFromKafkaFlow")
+    public IntegrationFlow receiveFromKafkaFlow(ConsumerFactory<String, String> consumerFactory){
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfig.getBootstrapServers());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "siTestGroup");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 100);
+        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 15000);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        ConsumerProperties consumerProperties=new ConsumerProperties("kReplies");
+        consumerProperties.setKafkaConsumerProperties(props);
+        return IntegrationFlow.from(Kafka.inboundChannelAdapter(consumerFactory,consumerProperties))
+                .channel(fromKafkaMessageChannel())
+                .transform(obj->{
+                    System.out.println(obj);
+                    return obj;
+                })
+                .get();
+    }
+
+    public String convertToJson(Transaction transaction){
+        try {
+            return objectMapper.writeValueAsString(transaction);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

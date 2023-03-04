@@ -19,5 +19,6 @@
         <module>ipl-match-data-async-processor</module>
         <module>ipl-match-data-multi-thread-processor</module>
         <module>ipl-match-data-partition-processor</module>
+        <module>ipl-match-data-partition-receiver</module>
     </modules>
 </project>
