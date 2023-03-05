@@ -22,7 +22,8 @@
         <module>remote-chunk-leader</module>
 		<module>remote-chunk-worker</module>
 		<module>ipl-data-processor</module>
-		<!--<module>scaling</module>-->
+        <module>spring-integration-intro</module>
+        <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
 	<properties>

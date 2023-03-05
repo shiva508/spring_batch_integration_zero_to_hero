@@ -50,6 +50,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -145,11 +147,13 @@ public class IplMatchDataPartitionBatchKafkaIntegrationConfiguration {
     @Bean
     //@StepScope
     public Step step1() {
+        Map<String, Object> headers=new LinkedHashMap<>();
+        headers.put("kafka_topic","kRequests");
         return new StepBuilder("step1",jobRepository)
                 .<Transaction, Transaction>chunk(100,transactionManager)
                 .reader(fileTransactionReader(null))
                 .processor(transaction -> {
-                    toKafkaMessageChannel().send(new GenericMessage<>(convertToJson(transaction)));
+                    toKafkaMessageChannel().send(new GenericMessage<>(convertToJson(transaction),headers));
                     return transaction;
                 })
                 .writer(writer(null))
@@ -225,7 +229,7 @@ public class IplMatchDataPartitionBatchKafkaIntegrationConfiguration {
                 .get();
     }
 
-    @Bean("receiveFromKafkaFlow")
+   /* @Bean("receiveFromKafkaFlow")
     public IntegrationFlow receiveFromKafkaFlow(ConsumerFactory<String, String> consumerFactory){
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,kafkaConfig.getBootstrapServers());
@@ -239,12 +243,12 @@ public class IplMatchDataPartitionBatchKafkaIntegrationConfiguration {
         consumerProperties.setKafkaConsumerProperties(props);
         return IntegrationFlow.from(Kafka.inboundChannelAdapter(consumerFactory,consumerProperties))
                 .channel(fromKafkaMessageChannel())
-                .transform(obj->{
-                    System.out.println(obj);
-                    return obj;
+                .handle((payload, headers) -> {
+                    System.out.println(payload);
+                    return payload;
                 })
                 .get();
-    }
+    }*/
 
     public String convertToJson(Transaction transaction){
         try {
