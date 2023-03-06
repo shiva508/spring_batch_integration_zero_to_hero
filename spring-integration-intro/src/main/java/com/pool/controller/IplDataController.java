@@ -25,4 +25,10 @@ public class IplDataController {
         CommonResponse commonResponse = iplService.sendIplDataToChannel(iplData);
         return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
     }
+
+    @PostMapping("/addnew")
+    public ResponseEntity<String> sendIplDataNew(@RequestBody IplData iplData){
+        String commonResponse = iplService.toJson(iplData);
+        return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+    }
 }

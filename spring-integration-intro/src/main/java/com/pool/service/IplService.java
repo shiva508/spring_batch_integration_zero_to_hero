@@ -1,5 +1,6 @@
 package com.pool.service;
 
+import com.pool.config.gateway.IplGateway;
 import com.pool.record.CommonResponse;
 import com.pool.record.IplData;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,15 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class IplService {
 
-    private final DirectChannel transmitterMessageChannel;
 
-    public IplService(@Qualifier("transmitterMessageChannel") DirectChannel transmitterMessageChannel) {
-        this.transmitterMessageChannel = transmitterMessageChannel;
+    private final IplGateway iplGateway;
+
+    public IplService(IplGateway iplGateway) {
+
+        this.iplGateway=iplGateway;
     }
 
     public CommonResponse sendIplDataToChannel(IplData iplData){
-        transmitterMessageChannel.send(MessageBuilder.withPayload(iplData).setHeader("app","Shiva").build());
-        return new  CommonResponse("Ok");
+        return iplGateway.sendIpldate(iplData);
+    }
+
+    public String toJson(IplData iplData){
+        return iplGateway.toJson(iplData);
     }
 
 }
