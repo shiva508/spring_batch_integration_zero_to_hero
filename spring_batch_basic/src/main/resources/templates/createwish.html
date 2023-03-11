@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="we wish is used to wish our loved one" />
+
+    <!-- Always include this line of code!!! -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/general.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/queries.css" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js"
+    ></script>
+    <script defer src="js/createwish.js"></script>
+    <!--new bootstrap-->
+    <!--<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      type="text/javascript"
+      th:src="@{webjars/jquery/2.2.4/jquery.min.js}"
+    ></script>
+    <title>We-Wish &mdash; Never miss to wish your loved once!</title>
+  </head>
+
+  <body>
+    <main>
+      <section class="section-cta" id="cta">
+        <div class="container">
+          <div class="cta">
+            <div class="cta-text-box">
+              <h2 class="heading-secondary">
+                Please Provide details to create wish
+              </h2>
+              <p class="cta-text">
+                Healthy, tasty and hassle-free meals are waiting for you. Start
+                eating well today. You can cancel or pause anytime. And the
+                first meal is on us!
+              </p>
+
+              <form class="cta-form" id="createwish" name="sign-up" netlify>
+                <div>
+                  <label for="nameOfWisher">Your Name</label>
+                  <input
+                    id="nameOfWisher"
+                    type="text"
+                    placeholder="Bruce Wayne"
+                    name="nameOfWisher"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="nameOfWishe">Name of persone to wish</label>
+                  <input
+                    id="nameOfWishe"
+                    type="text"
+                    placeholder="Richal"
+                    name="nameOfWishe"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="emailOfWisher">Email</label>
+                  <input
+                    id="emailOfWisher"
+                    type="text"
+                    placeholder="@com"
+                    name="emailOfWisher"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="emailOfWisher">Phone</label>
+                  <input
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="00000000000"
+                    name="phoneNumber"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="heroMessage">Hero Message</label>
+                  <textarea
+                    class="form-control"
+                    id="heroMessage"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="subHeroMessage">Sub Hero Message</label>
+                  <textarea
+                    class="form-control"
+                    id="subHeroMessage"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label for="heroImage">Upload hero image</label>
+                  <input type="file" class="form-control-file" id="heroImage" />
+                  <input
+                    type="hidden"
+                    name="heroImage-image-base64"
+                    id="heroImage-image-base64"
+                  />
+                </div>
+                <div>
+                  <label for="subHeroImage">Upload sub hero to image</label>
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    id="subHeroImage"
+                  />
+                  <input
+                    type="hidden"
+                    name="subHeroImage-image-base64"
+                    id="subHeroImage-image-base64"
+                  />
+                </div>
+
+                <button class="btn btn--form">Create WISH</button>
+              </form>
+            </div>
+            <div
+              class="cta-img-box"
+              role="img"
+              aria-label="Woman enjoying food"
+            ></div>
+            
+            <button id="shiva">Create Call</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -23,6 +23,8 @@
 		<module>remote-chunk-worker</module>
 		<module>ipl-data-processor</module>
         <module>spring-integration-intro</module>
+        <module>spring_batch_database_migration</module>
+        <module>spring_batch_basic</module>
         <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
