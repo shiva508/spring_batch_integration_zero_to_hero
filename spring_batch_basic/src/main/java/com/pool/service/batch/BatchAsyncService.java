@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
@@ -17,15 +16,11 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.pool.configuration.batch.CustomerCsvFileBatchConfig;
 import com.pool.configuration.batch.reader.StudentFlatFileItemReader;
-import com.pool.domin.Customer;
 import com.pool.modal.CustomJobParameter;
 import com.pool.modal.CustomerModel;
 
@@ -77,9 +72,9 @@ public class BatchAsyncService {
 	@Async
 	public void asyncBatchProsessor(String jobname,List<CustomJobParameter> customJobParameters) {
 		try {
-			Map<String, JobParameter> param=new HashMap<>();
-			param.put("Time", new JobParameter(new Date()));
-			customJobParameters.forEach(customJobParameter->param.put(customJobParameter.getParamKey(), new JobParameter(customJobParameter.getParamValue())));
+			Map<String, JobParameter<?>> param=new HashMap<>();
+			param.put("Time", new JobParameter<>(new Date(),Date.class));
+			customJobParameters.forEach(customJobParameter->param.put(customJobParameter.getParamKey(), new JobParameter<>(customJobParameter.getParamValue(),String.class)));
 			JobParameters jobParameters=new JobParameters(param);
 			JobExecution jobExecution=null;
 			if(jobname.equals("firstJob")) {
@@ -99,15 +94,14 @@ public class BatchAsyncService {
 			}else if(jobname.equals("jdbcJsonStudentJob")) {
 				jobExecution=jobLauncher.run(jdbcJsonStudentJob, jobParameters);
 			}
-			System.out.println(jobExecution.getJobConfigurationName());
 		} catch (Exception e) {
 		}
 	}
 	
 	
 	public void uploadCsvFile(MultipartFile multipartFile) {
-		Map<String, JobParameter> param=new HashMap<>();
-		param.put("Time", new JobParameter(new Date()));
+		Map<String, JobParameter<?>> param=new HashMap<>();
+		param.put("Time", new JobParameter<>(new Date(),Date.class));
 		FlatFileItemReader<CustomerModel> csvCustomerfileItemReader = studentFlatFileItemReader.csvCustomerfileItemReader(multipartFile);
 		JobParameters jobParameters=new JobParameters(param);
 		JobExecution jobExecution=null;

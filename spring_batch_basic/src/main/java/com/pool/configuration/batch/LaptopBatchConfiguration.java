@@ -3,18 +3,15 @@ package com.pool.configuration.batch;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.EntityManagerFactory;
-
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -28,21 +25,23 @@ import org.springframework.lang.Nullable;
 
 import com.pool.configuration.batch.reader.LaptoptemReader;
 import com.pool.domin.Laptop;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableBatchProcessing
-public class LaptopBatchConfiguration extends DefaultBatchConfigurer {
+public class LaptopBatchConfiguration {
 
-    @Autowired
-    public StepBuilderFactory stepBuilderFactory;
-
-    @Autowired
-    public JobBuilderFactory jobBuilderFactory;
 
     private LaptoptemReader<Laptop> laptoptemReader;
 
     @Autowired
     private EntityManagerFactory emf;
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     @StepScope
     @Bean
@@ -64,7 +63,7 @@ public class LaptopBatchConfiguration extends DefaultBatchConfigurer {
 
     @Bean
     public Job laptopJob() {
-        return jobBuilderFactory.get("LaptopJob")
+        return new JobBuilder("LaptopJob",jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(laptopStep())
                 .build();
@@ -72,17 +71,16 @@ public class LaptopBatchConfiguration extends DefaultBatchConfigurer {
 
     @Bean
     public Step laptopStep() {
-        return stepBuilderFactory.get("Laptop")
-                .<Laptop, Laptop>chunk(100)
+        return new StepBuilder("Laptop",jobRepository)
+                .<Laptop, Laptop>chunk(100,transactionManager)
                 .reader(getLaptoptemReader()).writer(laptopJpaItemWriter()).build();
     }
 
-    @Override
-    protected JobRepository createJobRepository() throws Exception {
+   /* protected JobRepository createJobRepository() throws Exception {
         MapJobRepositoryFactoryBean factoryBean = new MapJobRepositoryFactoryBean();
         factoryBean.afterPropertiesSet();
         return factoryBean.getObject();
-    }
+    }*/
 
     // @Bean
     public ItemReader<Laptop> laptopItemReader(@Value("#{jobParameters['laptops']}") List<Laptop> laptops) {

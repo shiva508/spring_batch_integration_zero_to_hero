@@ -1,13 +1,8 @@
 package com.pool.configuration.batch.schedular;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,11 +21,7 @@ public class SecondJobSchedular {
 	//@Scheduled(cron = "${secondjob.run.rate}")
 	public void runSecondJob() {
 		try {
-			Map<String, JobParameter> param = new HashMap<>();
-			param.put("Time", new JobParameter(new Date()));
-			JobParameters jobParameters = new JobParameters(param);
-			JobExecution jobExecution = null;
-			jobExecution = jobLauncher.run(firstJob, jobParameters);	
+			JobExecution jobExecution  = jobLauncher.run(firstJob, new JobParametersBuilder().addDate("Time",new Date()).toJobParameters());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

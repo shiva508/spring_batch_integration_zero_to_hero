@@ -1,7 +1,6 @@
 package com.pool.configuration.batch.writer;
 
-import java.util.List;
-
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +8,8 @@ import org.springframework.stereotype.Component;
 public class SecondItemWriter implements ItemWriter<Long> {
 
 	@Override
-	public void write(List<? extends Long> items) throws Exception {
-		System.out.println("SecondItemWriter " + items.size());
-		items.stream().forEach(System.out::println);
+	public void write(Chunk<? extends Long> chunk) throws Exception {
+		System.out.println("SecondItemWriter " + chunk.size());
+		chunk.getItems().stream().forEach(System.out::println);
 	}
-
 }

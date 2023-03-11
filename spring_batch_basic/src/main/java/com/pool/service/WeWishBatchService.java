@@ -1,15 +1,10 @@
 package com.pool.service;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
-
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -22,11 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import com.pool.configuration.batch.LaptopBatchConfiguration;
-//import com.pool.configuration.batch.WeWishBatchConfiguration;
 import com.pool.configuration.batch.reader.LaptoptemReader;
 import com.pool.configuration.batch.reader.WeWishItemReader;
 import com.pool.domin.Laptop;
@@ -74,9 +67,8 @@ public class WeWishBatchService {
 						String.valueOf(num))))
 				.toList();
 
-		Map<String, JobParameter> param = new HashMap<>();
-		param.put("Time", new JobParameter(new Date()));
-		// param.put("laptops", new JobParameter(laptops));
+		 param.put("laptops", new JobParameter(laptops));
+
 		LaptoptemReader<Laptop> userItemReader = new LaptoptemReader<Laptop>();
 		userItemReader.setReaderItems(laptops);
 		laptopBatchConfiguration.setLaptoptemReader(userItemReader);

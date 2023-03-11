@@ -1,6 +1,6 @@
 package com.pool.configuration.datasource;
 
-import javax.persistence.EntityManagerFactory;
+
 import javax.sql.DataSource;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -13,7 +13,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-@Configuration
+//@Configuration
 public class StudentPoolDatasourceConfig {
 	/*@Primary
 	@ConfigurationProperties(prefix = "spring.datasource")

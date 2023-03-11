@@ -2,25 +2,10 @@ package com.pool.domin;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import lombok.Data;
-import lombok.ToString;
+import jakarta.persistence.*;
 
 @Entity
 @Table
-/*
- * @Data
- * 
- * @ToString
- */
 public class WeWish implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

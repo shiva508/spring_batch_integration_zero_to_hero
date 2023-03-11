@@ -1,19 +1,16 @@
 package com.pool.configuration.batch.writer;
 
-import java.util.List;
-
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Service;
-
 import com.pool.modal.StudentJson;
 
 @Service
 public class StudentJsonItemWriter implements ItemWriter<StudentJson> {
 
 	@Override
-	public void write(List<? extends StudentJson> items) throws Exception {
+	public void write(Chunk<? extends StudentJson> chunk) throws Exception {
 		System.out.println("JSON FILE PROSESSING");
-		items.forEach(System.out::println);
+		chunk.getItems().forEach(System.out::println);
 	}
-
 }

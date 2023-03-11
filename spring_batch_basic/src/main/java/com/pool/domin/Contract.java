@@ -1,12 +1,9 @@
 package com.pool.domin;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @Table
@@ -20,8 +17,6 @@ public class Contract {
 	private Date creationDate;
 	private String status;
 	public Contract() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 	public String getContractId() {
 		return contractId;
