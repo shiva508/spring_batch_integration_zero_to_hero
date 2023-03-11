@@ -67,7 +67,7 @@ public class WeWishBatchService {
 						String.valueOf(num))))
 				.toList();
 
-		 param.put("laptops", new JobParameter(laptops));
+		// param.put("laptops", new JobParameter(laptops));
 
 		LaptoptemReader<Laptop> userItemReader = new LaptoptemReader<Laptop>();
 		userItemReader.setReaderItems(laptops);
