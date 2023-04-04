@@ -1,0 +1,318 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: #000;
+  font-family: "Source Sans Pro";
+}
+header {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: center;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  border-radius: 20px;
+}
+.we-wish-logo {
+  stroke: #13f340;
+  width: 122px;
+  height: 200px;
+  display: inline-block;
+}
+.we-wish-header {
+  color: azure;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
+  font-weight: 800;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  border-radius: 20px;
+}
+
+.container {
+  width: 1573px;
+  margin: 0 auto;
+}
+.hero-section {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  column-gap: 70px;
+  margin-bottom: 80px;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  border-radius: 20px;
+}
+.wish-name {
+  color: #4452fb;
+  text-transform: uppercase;
+}
+img {
+  width: 686px;
+  border-radius: 12px;
+}
+
+h1 {
+  color: #e6e6e7;
+  font-size: 57px;
+  font-weight: 700;
+  margin-bottom: 48px;
+}
+h2 {
+  color: #e6e6e7;
+  font-size: 24px;
+  font-weight: 700;
+}
+.wishes_text {
+  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.7);
+  padding-left: 24px;
+}
+.sub-hero {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  margin-bottom: 100px;
+  border-radius: 20px;
+}
+.sub-hero-img-left,
+.sub-hero-img-middle,
+.sub-hero-img-right {
+  width: 300px;
+}
+.love {
+  display: grid;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  box-shadow: 0 20px 30px 0 #63e6be;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+.care {
+  display: grid;
+  box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+.affection {
+  display: grid;
+  box-shadow: 0 20px 30px 0 #7950f2;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+.love-text,
+.affection-text,
+.care-text {
+  text-align: center;
+  color: #f3f5f7;
+  font-family: "Oooh Baby", cursive;
+  font-size: 80px;
+  font-weight: 800;
+}
+
+@media (max-width: 360px) {
+  .we-wish-header {
+    color: azure;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 93px;
+    font-weight: 800;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+  }
+  .container {
+    width: 360px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 343px;
+    justify-content: center;
+    align-items: center;
+    row-gap: 20px;
+  }
+  h1 {
+    color: #e6e6e7;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 48px;
+    padding: 10px;
+  }
+  h2 {
+    color: #e6e6e7;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 12px;
+  }
+  .hero-section {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 80px;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+  }
+  img {
+    width: 340px;
+  }
+  .sub-hero {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    margin-bottom: 100px;
+    border-radius: 20px;
+    row-gap: 57px;
+  }
+}
+
+@media (max-width: 411px) {
+  .we-wish-header {
+    color: azure;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 93px;
+    font-weight: 800;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+  }
+  .container {
+    width: 411px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 343px;
+    justify-content: center;
+    align-items: center;
+    row-gap: 20px;
+  }
+  h1 {
+    color: #e6e6e7;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 48px;
+    padding: 10px;
+  }
+  h2 {
+    color: #e6e6e7;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 12px;
+  }
+  .hero-section {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 80px;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+  }
+  img {
+    width: 340px;
+  }
+  .sub-hero {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    margin-bottom: 100px;
+    border-radius: 20px;
+    row-gap: 57px;
+  }
+  .wishes_text {
+    box-shadow: 0 20px 30px 0 rgba(250, 44, 44, 0.7);
+    padding-left: 24px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 414px) {
+  header {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+  }
+  .we-wish-logo {
+    stroke: #13f340;
+    width: 122px;
+    height: 200px;
+    margin-left: 106px;
+  }
+  .we-wish-header {
+    color: azure;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 93px;
+    font-weight: 800;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+    margin-top: -46px;
+  }
+  .container {
+    width: 411px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 343px;
+    justify-content: center;
+    align-items: center;
+    row-gap: 20px;
+  }
+  h1 {
+    color: #e6e6e7;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 48px;
+    padding: 10px;
+  }
+  h2 {
+    color: #e6e6e7;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 12px;
+  }
+  .hero-section {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 80px;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    border-radius: 20px;
+  }
+  img {
+    width: 340px;
+  }
+  .sub-hero {
+    display: grid;
+    grid-template-columns: auto;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 20px 30px 0 rgb(225 92 92 / 70%);
+    margin-bottom: 100px;
+    border-radius: 20px;
+    row-gap: 57px;
+  }
+  .wishes_text {
+    box-shadow: 0 20px 30px 0 rgba(250, 44, 44, 0.7);
+    /* padding-left: 24px; */
+    /* margin-bottom: 10px; */
+    border-radius: 20px;
+  }
+}

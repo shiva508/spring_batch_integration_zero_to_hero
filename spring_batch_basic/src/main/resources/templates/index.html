@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="we wish is used to wish our loved one" />
+
+    <!-- Always include this line of code!!! -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/general.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/queries.css" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      defer
+      src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js"
+    ></script>
+    <script defer src="js/script.js"></script>
+    <!--new bootstrap-->
+    <!--<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      type="text/javascript"
+      th:src="@{webjars/jquery/2.2.4/jquery.min.js}"
+    ></script>
+    <title>We-Wish &mdash; Never miss to wish your loved once!</title>
+  </head>
+
+  <body>
+    <main>
+      <section class="section-hero">
+        <div class="hero">
+          <div class="hero-text-box">
+            <h1 class="heading-primary">
+              Wishing you a very happy birthday NITHYA, Keep smiling every
+              single day
+            </h1>
+            <p class="hero-description">
+              Count not the candles…see the lights they give. Count not the
+              years, but the life you live. Wishing you a wonderful time ahead.
+            </p>
+          </div>
+          <div class="hero-img-box">
+            <picture>
+              <source srcset="img/ni.png" type="image/webp" />
+              <source srcset="img/ni.png" type="image/png" />
+
+              <img
+                src="img/ni.png"
+                class="hero-img"
+                alt="Woman enjoying food, meals in storage container, and food bowls on a table"
+              />
+            </picture>
+          </div>
+        </div>
+      </section>
+      <section class="section-cta" id="cta">
+        <div class="container">
+          <div class="cta">
+            <div class="cta-text-box">
+              <h2 class="heading-secondary">
+                Let us send worm wishes to NITHYA!
+              </h2>
+              <p class="cta-text">
+                Healthy, tasty and hassle-free meals are waiting for you. Start
+                eating well today. You can cancel or pause anytime. And the
+                first meal is on us!
+              </p>
+
+              <form class="cta-form" id="search-form" name="sign-up" netlify>
+                <div>
+                  <label for="wishername">Your Name</label>
+                  <input
+                    id="wishername"
+                    type="text"
+                    placeholder="Bruce Wayne"
+                    name="wishername"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="yourwishforfriend">Your wish message</label>
+                  <textarea
+                    class="form-control"
+                    id="yourwishforfriend"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label for="wisher-image">Upload your photo</label>
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    id="wisher-image"
+                  />
+                  <input
+                    type="hidden"
+                    name="wisher-image-base64"
+                    id="wisher-image-base64"
+                  />
+                </div>
+                <div>
+                  <label for="wish-image">Upload Nithya Photo</label>
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    id="wish-image"
+                  />
+                  <input
+                    type="hidden"
+                    name="wish-image-base64"
+                    id="wish-image-base64"
+                  />
+                </div>
+
+                <button class="btn btn--form">Wish NITHYA</button>
+              </form>
+            </div>
+            <div
+              class="cta-img-box"
+              role="img"
+              aria-label="Woman enjoying food"
+            ></div>
+          </div>
+        </div>
+      </section>
+      <section class="section-testimonials" id="testimonials">
+        <div class="testimonials-container">
+          <h2 class="heading-secondary">
+            Here are some wishes from your loved once
+          </h2>
+          <div class="testimonials"></div>
+        </div>
+        <div class="gallery"></div>
+      </section>
+    </main>
+  </body>
+</html>

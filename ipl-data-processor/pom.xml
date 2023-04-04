@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.pool</groupId>
+        <artifactId>spring_batch_integration_zero_to_hero</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ipl-data-processor</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>ipl-match-data-collector</module>
+        <module>ipl-remote-chunk-config</module>
+        <module>ipl-match-data-receiver</module>
+        <module>ipl-match-data-parallel-processing</module>
+        <module>ipl-match-data-async-processor</module>
+        <module>ipl-match-data-multi-thread-processor</module>
+        <module>ipl-match-data-partition-processor</module>
+        <module>ipl-match-data-partition-receiver</module>
+    </modules>
+</project>

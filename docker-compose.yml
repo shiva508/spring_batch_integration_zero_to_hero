@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+#POSTGRES SERVICE
+  postgres:
+    container_name: postgres_app
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-db:/data/postgres
+    ports:
+      - "5432:5432"
+volumes:
+  postgres-db:
+    driver: local

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="leader" />
+        <module name="ipl-match-data-multi-thread-processor" />
+        <module name="remote-chunk-worker" />
+        <module name="auto-config-remote-chunk" />
+        <module name="custom-mina-ftp-server" />
+        <module name="ipl-match-data-async-processor" />
+        <module name="files-integration" />
+        <module name="spring-integration-intro" />
+        <module name="ipl-match-data-partition-processor" />
+        <module name="ipl-match-data-collector" />
+        <module name="tdgtsb_book" />
+        <module name="ipl-match-data-receiver" />
+        <module name="ipl-match-data-parallel-processing" />
+        <module name="ipl-remote-chunk-config" />
+        <module name="remote-chunk-leader" />
+        <module name="spring_batch_basic" />
+        <module name="worker" />
+        <module name="spring_batch_database_migration" />
+        <module name="ipl-match-data-partition-receiver" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="auto-config-remote-chunk" options="-parameters" />
+      <module name="custom-mina-ftp-server" options="-parameters" />
+      <module name="files-integration" options="-parameters" />
+      <module name="ipl-match-data-async-processor" options="-parameters" />
+      <module name="ipl-match-data-collector" options="-parameters" />
+      <module name="ipl-match-data-multi-thread-processor" options="-parameters" />
+      <module name="ipl-match-data-parallel-processing" options="-parameters" />
+      <module name="ipl-match-data-partition-processor" options="-parameters" />
+      <module name="ipl-match-data-partition-receiver" options="-parameters" />
+      <module name="ipl-match-data-receiver" options="-parameters" />
+      <module name="ipl-remote-chunk-config" options="-parameters" />
+      <module name="leader" options="-parameters" />
+      <module name="remote-chunk-leader" options="-parameters" />
+      <module name="remote-chunk-worker" options="-parameters" />
+      <module name="spring-integration-intro" options="-parameters" />
+      <module name="spring_batch_basic" options="-parameters" />
+      <module name="spring_batch_database_migration" options="-parameters" />
+      <module name="tdgtsb_book" options="-parameters" />
+      <module name="worker" options="-parameters" />
+    </option>
+  </component>
+</project>
