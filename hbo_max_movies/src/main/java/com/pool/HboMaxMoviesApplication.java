@@ -31,8 +31,6 @@ public class HboMaxMoviesApplication implements CommandLineRunner {
                 .addDate("iplScheduleSummaryJob",new Date())
                 .addString("username","dasari508")
                 .addString("csvFilePath","/home/shiva/shiva/mywork/spring_batch_zero_to_hero/src/main/resources/output/students.csv")
-
-
                 .toJobParameters());
     }
 }

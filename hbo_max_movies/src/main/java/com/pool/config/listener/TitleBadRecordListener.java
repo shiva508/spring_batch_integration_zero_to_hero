@@ -1,7 +1,6 @@
 package com.pool.config.listener;
 
 import com.pool.entity.ErrorEntity;
-import com.pool.entity.TitleEntity;
 import com.pool.service.error.ErrorService;
 import com.pool.util.HboConstants;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class TitleBadRecordListener {
 
     private final ErrorService errorService;
-
 
     @OnSkipInRead
     public void onReadBadRecordFound(Throwable throwable) {
