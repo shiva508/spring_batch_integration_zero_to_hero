@@ -26,6 +26,7 @@
         <module>spring_batch_database_migration</module>
         <module>spring_batch_basic</module>
         <module>tdgtsb_book</module>
+        <module>hbo_max_movies</module>
         <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>
