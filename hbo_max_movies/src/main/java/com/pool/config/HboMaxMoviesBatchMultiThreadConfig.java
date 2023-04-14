@@ -4,7 +4,6 @@ import com.pool.config.listener.TitleBadRecordListener;
 import com.pool.config.writer.HboCreditWriter;
 import com.pool.config.writer.HboTitleWriter;
 import com.pool.entity.CreditEntity;
-import com.pool.entity.TitleEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -30,7 +29,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @Slf4j
 @AllArgsConstructor
-public class HboMaxMoviesBatchConfig {
+public class HboMaxMoviesBatchMultiThreadConfig {
 
     private final JobRepository jobRepository;
 
@@ -42,89 +41,23 @@ public class HboMaxMoviesBatchConfig {
 
     private final HboCreditWriter hboCreditWriter;
 
-    @Bean("hboTitleJob")
-    public Job hboTitleJob(){
-        return new JobBuilder("hboTitleJob",jobRepository)
+    @Bean("hboTitleMultiThreadJob")
+    public Job hboTitleMultiThreadJob(){
+        return new JobBuilder("hboTitleMultiThreadJob",jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(hboTitleStep())
-                .next(hboCreditStep())
+                .start(hboCreditMultithreadStep())
                 .build();
     }
-    @Bean("hboTitleStep")
-    public Step hboTitleStep(){
+
+    @Bean("hboCreditMultithreadStep")
+    public Step hboCreditMultithreadStep(){
         ThreadPoolTaskExecutor hboTaskExecutor=new ThreadPoolTaskExecutor();
         hboTaskExecutor.setCorePoolSize(6);
         hboTaskExecutor.setMaxPoolSize(6);
         hboTaskExecutor.afterPropertiesSet();
-        return new StepBuilder("hboTitleStep",jobRepository)
-                .<TitleEntity,TitleEntity>chunk(100,platformTransactionManager)
-                .reader(hboTitleReader(null))
-                //.writer(chunk ->System.out.println(chunk.getItems().size()))
-                .writer(hboTitleWriter)
-                .faultTolerant()
-                .skip(Throwable.class)
-                .skip(FlatFileParseException.class)
-                .skipLimit(Integer.MAX_VALUE)
-                .skipPolicy(new AlwaysSkipItemSkipPolicy())
-                .listener(titleBadRecordListener)
-                .build();
-    }
-
-
-    @Bean("hboTitleReader")
-    @StepScope
-    public FlatFileItemReader<TitleEntity> hboTitleReader(@Value("${hbo.title.file.path}")Resource resource){
-        System.out.println(resource.getFilename());
-        return new FlatFileItemReaderBuilder<TitleEntity>()
-                .resource(resource)
-                .name("hboTitleReader")
-                .linesToSkip(1)
-                .delimited().delimiter(",")
-                .names(new String[]{"id",
-                                    "title",
-                                    "type",
-                                    "description",
-                                    "release_year",
-                                    "age_certification",
-                                    "runtime",
-                                    "genres",
-                                    "production_countries",
-                                    "seasons",
-                                    "imdb_id",
-                                    "imdb_score",
-                                    "imdb_votes",
-                                    "tmdb_popularity",
-                                    "tmdb_score"})
-                .fieldSetMapper(fieldSet -> TitleEntity.builder()
-                        .movieId(fieldSet.readString("id").trim())
-                        .title(fieldSet.readString("title").trim())
-                        .type(fieldSet.readString("type").trim())
-                        //.description(fieldSet.readString("description").trim())
-                        .releaseYear(fieldSet.readString("release_year").trim())
-                        .ageCertification(fieldSet.readString("age_certification").trim())
-                        .runTime(fieldSet.readString("runtime").trim())
-                        .genres(fieldSet.readString("genres").trim())
-                        .productionCountries(fieldSet.readString("production_countries").trim())
-                        .seasons(fieldSet.readString("seasons").trim())
-                        .imdbId(fieldSet.readString("imdb_id").trim())
-                        .imdbScore(fieldSet.readString("imdb_score").trim())
-                        .imdbVotes(fieldSet.readString("imdb_votes").trim())
-                        .tmdbPopularity(fieldSet.readString("tmdb_popularity").trim())
-                        .tmdbScore(fieldSet.readString("tmdb_score").trim())
-                        .build())
-                .build();
-    }
-
-
-    @Bean("hboCreditStep")
-    public Step hboCreditStep(){
-        ThreadPoolTaskExecutor hboTaskExecutor=new ThreadPoolTaskExecutor();
-        hboTaskExecutor.setCorePoolSize(6);
-        hboTaskExecutor.setMaxPoolSize(6);
-        hboTaskExecutor.afterPropertiesSet();
-        return new StepBuilder("hboCreditStep",jobRepository)
+        return new StepBuilder("hboCreditMultithreadStep",jobRepository)
                 .<CreditEntity,CreditEntity>chunk(1000,platformTransactionManager)
-                .reader(hboCreditReader(null))
+                .reader(hboCreditMultithreadReader(null))
                 .writer(hboCreditWriter)
                 .faultTolerant()
                 .skip(Throwable.class)
@@ -135,9 +68,9 @@ public class HboMaxMoviesBatchConfig {
                 .build();
     }
 
-    @Bean("hboCreditReader")
+    @Bean("hboCreditMultithreadReader")
     @StepScope
-    public FlatFileItemReader<CreditEntity> hboCreditReader(@Value("${hbo.credit.file.path}") Resource resource){
+    public FlatFileItemReader<CreditEntity> hboCreditMultithreadReader(@Value("${hbo.credit.file.path}") Resource resource){
         return new FlatFileItemReaderBuilder<CreditEntity>()
                 .name("hboCreditReader")
                 .linesToSkip(1)

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Entity
-@Table(name="TBL_CREDIT")
+@Table(name="TBL_CREDIT_BACKUP")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,4 @@ public class CreditBackupEntity implements Serializable {
     private String name;
     private String character;
     private String role;
-
-
-
 }
