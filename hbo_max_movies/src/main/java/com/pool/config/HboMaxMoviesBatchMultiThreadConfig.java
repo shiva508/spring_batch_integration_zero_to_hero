@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @EnableBatchProcessing
@@ -51,6 +52,10 @@ public class HboMaxMoviesBatchConfig {
     }
     @Bean("hboTitleStep")
     public Step hboTitleStep(){
+        ThreadPoolTaskExecutor hboTaskExecutor=new ThreadPoolTaskExecutor();
+        hboTaskExecutor.setCorePoolSize(6);
+        hboTaskExecutor.setMaxPoolSize(6);
+        hboTaskExecutor.afterPropertiesSet();
         return new StepBuilder("hboTitleStep",jobRepository)
                 .<TitleEntity,TitleEntity>chunk(100,platformTransactionManager)
                 .reader(hboTitleReader(null))
@@ -113,6 +118,10 @@ public class HboMaxMoviesBatchConfig {
 
     @Bean("hboCreditStep")
     public Step hboCreditStep(){
+        ThreadPoolTaskExecutor hboTaskExecutor=new ThreadPoolTaskExecutor();
+        hboTaskExecutor.setCorePoolSize(6);
+        hboTaskExecutor.setMaxPoolSize(6);
+        hboTaskExecutor.afterPropertiesSet();
         return new StepBuilder("hboCreditStep",jobRepository)
                 .<CreditEntity,CreditEntity>chunk(1000,platformTransactionManager)
                 .reader(hboCreditReader(null))
@@ -122,6 +131,7 @@ public class HboMaxMoviesBatchConfig {
                 .skip(FlatFileParseException.class)
                 .skipLimit(Integer.MAX_VALUE)
                 .skipPolicy(new AlwaysSkipItemSkipPolicy())
+                .taskExecutor(hboTaskExecutor)
                 .build();
     }
 
@@ -147,4 +157,5 @@ public class HboMaxMoviesBatchConfig {
                         .build())
                 .build();
     }
+
 }
