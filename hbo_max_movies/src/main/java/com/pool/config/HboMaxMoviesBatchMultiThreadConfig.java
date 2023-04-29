@@ -45,19 +45,19 @@ public class HboMaxMoviesBatchMultiThreadConfig {
     public Job hboTitleMultiThreadJob(){
         return new JobBuilder("hboTitleMultiThreadJob",jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(hboCreditMultithreadStep())
+                .start(hboCreditMultiThreadStep())
                 .build();
     }
 
-    @Bean("hboCreditMultithreadStep")
-    public Step hboCreditMultithreadStep(){
+    @Bean("hboCreditMultiThreadStep")
+    public Step hboCreditMultiThreadStep(){
         ThreadPoolTaskExecutor hboTaskExecutor=new ThreadPoolTaskExecutor();
         hboTaskExecutor.setCorePoolSize(6);
         hboTaskExecutor.setMaxPoolSize(6);
         hboTaskExecutor.afterPropertiesSet();
-        return new StepBuilder("hboCreditMultithreadStep",jobRepository)
+        return new StepBuilder("hboCreditMultiThreadStep",jobRepository)
                 .<CreditEntity,CreditEntity>chunk(1000,platformTransactionManager)
-                .reader(hboCreditMultithreadReader(null))
+                .reader(hboCreditMultiThreadReader(null))
                 .writer(hboCreditWriter)
                 .faultTolerant()
                 .skip(Throwable.class)
@@ -65,12 +65,13 @@ public class HboMaxMoviesBatchMultiThreadConfig {
                 .skipLimit(Integer.MAX_VALUE)
                 .skipPolicy(new AlwaysSkipItemSkipPolicy())
                 .taskExecutor(hboTaskExecutor)
+                .listener(titleBadRecordListener)
                 .build();
     }
 
-    @Bean("hboCreditMultithreadReader")
+    @Bean("hboCreditMultiThreadReader")
     @StepScope
-    public FlatFileItemReader<CreditEntity> hboCreditMultithreadReader(@Value("${hbo.credit.file.path}") Resource resource){
+    public FlatFileItemReader<CreditEntity> hboCreditMultiThreadReader(@Value("${hbo.credit.file.path}") Resource resource){
         return new FlatFileItemReaderBuilder<CreditEntity>()
                 .name("hboCreditReader")
                 .linesToSkip(1)

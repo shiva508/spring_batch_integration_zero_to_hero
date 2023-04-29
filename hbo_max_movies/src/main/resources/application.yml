@@ -1,4 +1,8 @@
+server:
+  port: 8080
 spring:
+  application:
+    name: hbo_max_movies
   datasource:
     username: keycloak
     url: jdbc:postgresql://localhost:5432/keycloak
