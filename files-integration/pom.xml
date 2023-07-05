@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>files-integration</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>basic-files-integration</module>
+    </modules>
 
     <dependencies>
 

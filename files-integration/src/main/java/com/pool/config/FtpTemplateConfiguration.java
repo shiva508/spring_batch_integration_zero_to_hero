@@ -12,7 +12,7 @@ import org.springframework.integration.ftp.session.FtpRemoteFileTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
 
-@Configuration
+//@Configuration
 @Slf4j
 @Profile("prod")
 public class FtpTemplateConfiguration {

@@ -4,8 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FilesInterationApplication {
+public class BasicFilesIntegrationApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(FilesInterationApplication.class,args);
+        SpringApplication.run(BasicFilesIntegrationApplication.class, args);
     }
 }

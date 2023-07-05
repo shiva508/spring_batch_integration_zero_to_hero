@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-@Configuration
+//@Configuration
 @Slf4j
 @Profile("inbound")
 public class InboundConfiguration {

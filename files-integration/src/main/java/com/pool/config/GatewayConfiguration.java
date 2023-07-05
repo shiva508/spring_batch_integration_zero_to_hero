@@ -21,7 +21,7 @@ import org.springframework.web.servlet.function.ServerResponse;
 import java.util.Map;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 
-@Configuration
+//@Configuration
 public class GatewayConfiguration {
 
 
@@ -41,7 +41,7 @@ public class GatewayConfiguration {
     public IntegrationFlow gateWayIntegrationFlow(FtpRemoteFileTemplate ftpRemoteFileTemplate,
                                                   DelegatingSessionFactory<FTPFile> factoryMap){
         return flow -> flow.channel(incomingMessageChannel())
-                .handle((GenericHandler<Object>) (payload, headers) -> {
+                .handle((payload, headers) -> {
                     factoryMap.setThreadKey(payload);
                     return payload;
                 }).handle(Ftp.outboundGateway(ftpRemoteFileTemplate,AbstractRemoteFileOutboundGateway.Command.PUT,"payload")
