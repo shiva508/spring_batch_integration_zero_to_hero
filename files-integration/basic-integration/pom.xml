@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.pool</groupId>
-    <artifactId>basic-files-integration</artifactId>
+    <artifactId>basic-integration</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>basic-files-integration</name>
     <description>Demo project for Spring Boot</description>

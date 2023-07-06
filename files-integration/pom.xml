@@ -12,7 +12,7 @@
     <artifactId>files-integration</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>basic-files-integration</module>
+        <module>basic-integration</module>
     </modules>
 
     <dependencies>
