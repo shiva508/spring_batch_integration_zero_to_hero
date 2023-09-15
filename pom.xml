@@ -27,6 +27,7 @@
         <module>spring_batch_basic</module>
         <module>tdgtsb_book</module>
         <module>hbo_max_movies</module>
+        <module>batch-partition-file-processor</module>
         <!--<module>scaling</module>-->
     </modules>
 	<packaging>pom</packaging>

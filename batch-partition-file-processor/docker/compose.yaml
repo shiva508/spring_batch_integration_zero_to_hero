@@ -1,0 +1,23 @@
+version: "3.7"
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    container_name: comrade_postgres-1
+    image: "postgres:latest"
+    environment:
+      POSTGRES_DB: dear_comrade
+      POSTGRES_PASSWORD: comrade
+      POSTGRES_USER: dear
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    #    network_mode: bridge
+    network_mode: comrade
+
+networks:
+  comrade:
