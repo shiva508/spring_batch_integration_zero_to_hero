@@ -14,4 +14,5 @@ import java.io.Serializable;
 public class PartitionModel implements Serializable {
     private Long start;
     private Long end;
+    private Long stepNum;
 }

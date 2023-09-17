@@ -18,7 +18,7 @@ public class CityRangePartitioner {
         List<Long> cityIds=cityRepository.getCityIdList();
         if (!cityIds.isEmpty()) {
             if (cityIds.size()<= gridSize) {
-                PartitionModel partitionModel= PartitionModel.builder().start(cityIds.get(0)).end(cityIds.get(cityIds.size()-1)).build();
+                PartitionModel partitionModel= PartitionModel.builder().start(cityIds.get(0)).end(cityIds.get(cityIds.size()-1)).stepNum(1L).build();
                 partitionModels.add(partitionModel);
             }else {
                 int partitionSize= (int) (Math.ceil(((double) cityIds.size()/(double) gridSize)));
@@ -27,6 +27,7 @@ public class CityRangePartitioner {
                     PartitionModel partitionModel=new PartitionModel();
                     if (sizeTracker<cityIds.size()) {
                         partitionModel.setStart(cityIds.get(sizeTracker));
+                        partitionModel.setStepNum((long)i);
                         if (i<gridSize-1) {
                             partitionModel.setEnd(cityIds.get((sizeTracker + partitionSize) - 1));
                         }else {

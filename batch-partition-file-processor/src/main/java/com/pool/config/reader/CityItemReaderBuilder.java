@@ -42,7 +42,6 @@ public class CityItemReaderBuilder {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return pagingItemReader;
     }
 }
