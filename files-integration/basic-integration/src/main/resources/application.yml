@@ -1,2 +1,36 @@
+ftp1:
+  port: '2121'
+  username: shiva
+  host: localhost
+  password: shiva
+spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: 'true'
+  datasource:
+    password: keycloak
+    username: keycloak
+    url: jdbc:postgresql://localhost:5432/keycloak
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+    properties:
+      hibernate:
+        format_sql: 'true'
+  sql:
+    init:
+      mode: always
+ftp2:
+  port: '2121'
+  password: dasari
+  host: localhost
+  username: dasari
+server:
+  port: '8082'
 ftp:
   app-one: false
+  file:
+    name: P34A6686.JPG;

@@ -1,5 +1,6 @@
 package com.pool.domine;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
